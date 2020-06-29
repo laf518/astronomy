@@ -1,7 +1,35 @@
 ## CREATE LOCAL APP
+import requests
+import json
 import math
+import os
+import skyfield as sky
+import pandas as pd
+from dotenv import load_dotenv
+
+zip_code = input("Please provide your 5-digit zip code: ")
+zip_code = str(zip_code)
+
 ## CREATE API CALLS
-#CELESTIAL_COORD_API
+# Lat Long API Call:
+load_dotenv()
+google_key = os.environ.get("GOOGLE_API_KEY")
+request_url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + zip_code + "&key=" + google_key
+response = requests.get(request_url)
+parsed_response = json.loads(response.text)
+lat = parsed_response["results"][0]["geometry"]["location"]["lat"]
+lon = parsed_response["results"][0]["geometry"]["location"]["lng"]
+location = str(lat) + "," + str(lon)
+
+# Elevation API Call:
+request_url = "https://maps.googleapis.com/maps/api/elevation/json?locations=" + location + "&key=" + google_key
+response = requests.get(request_url)
+parsed_response = json.loads(response.text)
+elevation = parsed_response["results"][0]["elevation"]
+elevation_km = round((elevation / 1000), 2) 
+breakpoint()
+
+# Weather API Call:
 
 ## IMPORT INITIAL DATA FILE AND CONVERT TO DATAFRAME
 
