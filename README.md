@@ -16,7 +16,7 @@ Required third party packages are provided below and are also listed in the *req
     * *math*
     * *skyfield*
     * *python-dotenv*
-### Installingpi
+### Installing
 * The user will be required to clone the repository located at the following hyperlink: https://github.com/laf518/astronomy. 
 * Once the user has finished setting up their local repository, they must run the following code within their virtual Python environment to install the required third party packages:
 >`pip install -r requirements.txt`
