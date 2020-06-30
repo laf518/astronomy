@@ -15,8 +15,19 @@ print("------------------------------")
 print()
 print("Please provide the following information to help us maximize your experience:")
 print()
-zip_code = input("Please input your 5-digit zip code: ")
-zip_code = str(zip_code)
+# Validate user input:
+while True:
+    try:
+        zip_code = int(input("Please input your 5-digit zip code: "))
+        if len(str(zip_code)) == 5:
+            zip_code = str(zip_code)
+            break
+        else:
+            print("Hmmm...Looks like we don't have the correct number of characters.  Let's try again!")
+            print()
+    except ValueError:
+        print("Input contained non-numeric characters.  Please try again...")
+        print()
 
 # ## CREATE API CALLS
 # # Lat Long API Call:
@@ -45,7 +56,22 @@ elevation = parsed_response["results"][0]["elevation"]
 elevation_km = round((elevation / 1000), 2) 
 
 ## Find Sunrise / Sunset of requested date:
-date = input("When do plan to conduct your observation? (yyyy mm dd): ")
+# Validate input:
+
+while True:
+    try:
+        date = input("When do plan to conduct your observation? (yyyy mm dd): ")
+        test = date.split()
+        test = [int(i) for i in  test]
+        if len(str(test[0])) == 4 and len(str(test[1])) <= 2 and len(str(test[2])) <= 2 and len(test) == 3:
+            break
+        else:
+            print("Hmmm...there appears to be something wrong with your formatting.  Please try again.")
+            print()
+    except ValueError:
+        print("Non-numeric characters detected. Please try again")
+        print()
+    
 y = int(date[0:4])
 m = int(date[5:7])
 day = int(date[8:10])
@@ -137,19 +163,43 @@ df.drop(df[df.Z_Angle >= 90].index, inplace=True)
 ## CREATE SCORING ALGORITHM
 
 # Variables:
-tel_app = int(input("Please input the aperature (in mm) of your telescope: "))
+# Validate user input:
+
+while True:
+    try:
+        tel_app = int(input("Please input the aperature (in mm) of your telescope: "))
+        if len(str(tel_app)) <= 4:
+            break
+        else:
+            print("Let's check that number again...")
+            print()
+    except ValueError:
+        print("Non-numeric characters detected. Try again.")
+        print()
+
 tel_lim_vis = round(5*math.log((tel_app/6.5), 10), 2)
 
-landscape = input("Finally, what type of environment is your observatory in? Please enter [r] for rural, [s] for suburb, or [c] for city: ")
-if landscape == "r":
-    nelm_max = 7.5
-    nelm_min = 6.6
-elif landscape == "s":
-    nelm_max = 6.0
-    nelm_min = 5.5
-elif landscape == "c":
-    nelm_max = 5.0
-    nelm_min = 4.0
+# Validate user input:
+while True:    
+    landscape = input("Finally, what type of environment is your observatory in? Please enter [r] for rural, [s] for suburb, or [c] for city: ")
+    if landscape.lower() == "r":
+        nelm_max = 7.5
+        nelm_min = 6.6
+        break
+    elif landscape.lower() == "s":
+        nelm_max = 6.0
+        nelm_min = 5.5
+        break
+    elif landscape.lower() == "c":
+        nelm_max = 5.0
+        nelm_min = 4.0
+        break
+    else:
+        print("Invalid input.  Try again.")
+        print()
+
+    
+
 
 lim_vis_max = tel_lim_vis + nelm_max
 lim_vis_min = tel_lim_vis + nelm_min
@@ -194,3 +244,6 @@ print(df_score.to_string(index=False))
 print()
 print("Happy Viewing!")
 print()
+
+## CREDIT:  All formulas are from www.stjarnhimlen.se/comp/ppcomp.html
+## Third Party Package: http://rhodesmill.org/skyfield/
