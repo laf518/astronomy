@@ -1,0 +1,6 @@
+requests
+math
+skyfield
+pandas
+numpy
+python-dotenv
